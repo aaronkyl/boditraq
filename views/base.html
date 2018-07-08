@@ -3,8 +3,20 @@
 <html>
     <header>
         <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="style/base.css" type="text/css">
     </header>
     <body>
+        <nav>
+            <div>
+                <a href="/">BodiTraq</a>
+            </div>
+            <div>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/track">Enter New Measurements</a>
+                <a href="/account">Account</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>
