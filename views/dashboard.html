@@ -6,4 +6,7 @@
 
 {% block body %}
     <p>dashboard</p>
+    {% for session in sessions %}
+        <p>{{ session.sysdate }}</p>
+    {% endfor %}
 {% endblock %}
