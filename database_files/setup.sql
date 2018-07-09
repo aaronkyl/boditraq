@@ -1,5 +1,6 @@
 CREATE TABLE users (
-  username varchar PRIMARY KEY,
+  id serial PRIMARY KEY,
+  username varchar,
   firstname varchar NOT NULL,
   lastname varchar NOT NULL,
   email varchar NOT NULL,
@@ -8,12 +9,12 @@ CREATE TABLE users (
 
 CREATE TABLE body_measurements_cd (
   id serial PRIMARY KEY,
-  body_measurement_name varchar NOT NULL
+  body_measurement_literal varchar NOT NULL
 );
 
 CREATE TABLE user_body_measurements (
   id serial PRIMARY KEY,
-  username varchar REFERENCES users (username) NOT NULL,
+  user_id integer REFERENCES users (id) NOT NULL,
   body_measurements_cd_id integer REFERENCES body_measurements_cd (id) NOT NULL,
   measurement numeric NOT NULL,
   datetime date NOT NULL
