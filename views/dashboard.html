@@ -4,9 +4,26 @@
     Dashboard
 {% endblock %}
 
+{% block headItems %}
+    <link rel="stylesheet" href="style/dashboard.css" type="text/css">
+{% endblock %}
+
 {% block body %}
     <p>dashboard</p>
-    {% for session in sessions %}
-        <p>{{ session.sysdate }}</p>
-    {% endfor %}
+    <table>
+        <tr>
+            <th>Session</th>
+            {% for literal in measurementLiterals %}
+                <th>{{ literal }}</th>
+            {% endfor %}
+        </tr>
+        {% for session in sessions %}
+        <tr>
+            <td>{{ session.sysdate }}</td>
+            {% for measurement in session.measurements %}
+                <td>{{ measurement }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
