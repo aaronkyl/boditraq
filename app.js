@@ -35,7 +35,7 @@ app.use(passport.session());
 passport.use(new LocalStrategy((username, password, done) => {
     console.log("Login process:", username);
     const password_hash = pbkdf2.pbkdf2Sync(password, salt, 1, 32, 'sha256');
-    return db.one("SELECT id, username, firstname, lastname, email FROM users WHERE username=$1 AND password_hash=$2", [username, password_hash])
+    return db.one("SELECT id, username, firstname, lastname, email FROM users WHERE username=$1 AND password_hash=$2", [username.toLowerCase(), password_hash])
       .then((result)=> {
           console.log("SUCCESS: ", result);
           return done(null, result);
@@ -103,7 +103,7 @@ app.route('/register')
     .get((req, resp) => resp.render('register.html', {}))
     .post((req, resp) => {
         let newRecord = {
-            username: req.body.username, 
+            username: req.body.username.toLowerCase(), 
             firstname: req.body.firstname, 
             lastname: req.body.lastname, 
             email: req.body.email, 
