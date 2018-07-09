@@ -1,1 +1,18 @@
 {% extends "base.html" %}
+
+{% block title %}
+    Track
+{% endblock %}
+
+{% block body %}
+    <p>Weight is required</p>
+    <form action="/track" method="POST">
+    {% for measurement in measurements %}
+        <div class="measurement-input-container">
+            <label for="{{ measurement.id }}">{{ measurement.body_measurement_literal }}</label>
+            <input name="{{ measurement.id }}" {% if measurement.body_measurement_literal == "Weight" %} required {% endif %}>
+        </div>
+    {% endfor %}
+    <button type="submit">Submit</button>
+    </form>
+{% endblock %}

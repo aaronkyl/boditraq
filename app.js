@@ -24,7 +24,7 @@ app.use(session({
   secret: process.env.SECRET_KEY || 'dev',
   resave: true,
   saveUninitialized: false,
-  cookie: {maxAge: 60000}
+  cookie: {maxAge: 3600000}
 }));
 
 app.use(passport.initialize());
@@ -65,22 +65,31 @@ passport.deserializeUser((id, done)=>{
     });
   });
 
+// https://stackoverflow.com/questions/18739725/how-to-know-if-user-is-logged-in-with-passport-js
+function loggedIn(req, res, next) {
+    if (req.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
 app.route('/')
     .get((req, resp) => {
         resp.render('index.html', {user: JSON.stringify(req.user)});
     })
     .post((req, resp) => resp.redirect('/'));
    
-app.get('/login', (req, resp) => {
-    resp.render('login.html', {user: JSON.stringify(req.user)});
-    });
-app.post('/login', passport.authenticate('local'), (req, resp) => {
-    console.log("login post req.user info: ", req.user);
-    resp.redirect('/dashboard');
+app.route('/login')
+    .get((req, resp) => resp.render('login.html'))
+    .post(passport.authenticate('local'), (req, resp) => {
+        console.log("login post req.user info: ", req.user);
+        resp.redirect('/dashboard');
     });  
     
-app.get('/register', (req, resp) => resp.render('register.html', {}));
-app.post('/register', (req, resp) => {
+app.route('/register')
+    .get((req, resp) => resp.render('register.html', {}))
+    .post((req, resp) => {
         let newRecord = {
             username: req.body.username, 
             firstname: req.body.firstname, 
@@ -110,28 +119,55 @@ app.post('/register', (req, resp) => {
         resp.redirect('/');
     });
 
-app.get('/dashboard', (req, resp) => {
-        const selectQuery = "SELECT * FROM user_body_measurements WHERE user_id = ${user_id}";
-        console.log("dashboard req.user.id: ", req.user.id);
-        const user_id = {user_id: req.user.id};
-        db.any(selectQuery, user_id)
-        .then(data => {
-            console.log("dashboard data: ", data);
-            resp.render('dashboard.html', {data: data});
+app.route('/dashboard')
+    .get(loggedIn, (req, resp) => {
+        const selectQuery = "SELECT * FROM user_measurement_sessions WHERE user_id = ${user_id}";
+        const queryParams = {user_id: req.user.id};
+        db.any(selectQuery, queryParams)
+        .then(sessions => {
+            console.log("dashboard data: ", sessions);
+            resp.render('dashboard.html', {sessions: sessions});
         })
-        .catch(err => {
-            console.log("/dashboard error: ", err);
-        });
+        .catch(err => console.log("/dashboard error: ", err));
     });
 
 app.route('/track')
-    .get((req,resp) => {
-        resp.render('track.html');
+    .get(loggedIn, (req,resp) => {
+        db.any('SELECT * FROM body_measurements_cd')
+        .then(data => {
+            resp.render('track.html', {measurements: data});
+        })
+        .catch(err => console.log("/track error: ", err));
+    })
+    .post(loggedIn, (req, resp) => {
+        db.one("INSERT INTO user_measurement_sessions VALUES (default, $1, $2) RETURNING id", [req.user.id, new Date()])
+        .then(data => {
+            let session_id = data.id;
+            for (let prop in req.body) {
+                if (req.body[prop]) {
+                    db.query('INSERT INTO user_body_measurements \
+                    VALUES (default, ${user_measurement_sessions_id}, ${body_measurements_cd_id}, ${measurement})',
+                    { 
+                        user_measurement_sessions_id: session_id,
+                        body_measurements_cd_id: prop,
+                        measurement: req.body[prop]
+                    })
+                    .catch(err => console.log("/track measurement insert error: ", err));
+                }
+            }
+            
+            resp.redirect('/dashboard');
+        })
+        .catch(err => console.log("/track session insert error: ", err));
     });
 
 app.get('/account', (req, resp) => resp.redirect('/'));
 
-app.get('/logout', (req, resp) => resp.redirect('/'));
+app.route('/logout')
+    .get((req, resp) => {
+        req.logout();
+        resp.redirect('/');
+    });
 
 
 const port = process.env.PORT || 8080;
