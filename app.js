@@ -30,6 +30,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// adding to allow Passport data to be accessible in Nunjucks templates
+// https://stackoverflow.com/a/19070292/6415693
+app.use(function(req,resp,next){
+    resp.locals.session = req.session;
+    next();
+});
+
 
 // https://stackoverflow.com/questions/22078839/installing-passportjs-with-postgresql
 passport.use(new LocalStrategy((username, password, done) => {
@@ -95,7 +102,6 @@ app.route('/')
 app.route('/login')
     .get((req, resp) => resp.render('login.html'))
     .post(passport.authenticate('local'), (req, resp) => {
-        console.log("login post req.user info: ", req.user);
         resp.redirect('/dashboard');
     });  
     
@@ -133,6 +139,9 @@ app.route('/register')
 
 app.route('/dashboard')
     .get(loggedIn, (req, resp) => {
+        
+        console.log(req.session);
+        
         const selectQuery = "\
             SELECT \
                 sub.session_id, \
