@@ -154,27 +154,39 @@ app.route('/dashboard')
         db.any(selectQuery, queryParams)
         .then(sessions => {
             const allSessions = [];
-            console.log("sessions: ", sessions);
             sessions.forEach(record => {
-                console.log("record: ", record);
                 if (!containsObject(record.session_id, allSessions)) {
                     allSessions.push({
                         session_id: record.session_id,
                         sysdate: record.sysdate,
                         record_count: record.record_count,
-                        measurements: []
+                        measurements: new Array(9)
                     });
                 }
                 for (let i = 0; i < allSessions.length; i++) {
                     if (allSessions[i].session_id == record.session_id) {
-                        allSessions[i].measurements.push(
-                            { literal: record.literal, measurement: record.measurement }
-                        );
+                        allSessions[i].measurements[record.sort_order - 1] = record.measurement;
                     }
                 }
             });
-            console.log("dashboard data: ", allSessions);
-            resp.render('dashboard.html', {sessions: allSessions});
+            return allSessions;
+        })
+        .then(sessions => {
+            const allSessions = sessions;
+            const measurementLiterals = [];
+            
+            db.query("SELECT * FROM body_measurements_cd ORDER BY sort_order")
+            .then(data => {
+                console.log(data);
+                for (let i = 0, l = data.length; i < l; i++) {
+                    measurementLiterals.push(data[i].body_measurement_literal);
+                }
+            })
+            .then(() => {
+                console.log("allSessions\n", allSessions);
+                resp.render('dashboard.html', {sessions: allSessions, measurementLiterals: measurementLiterals});
+            })
+            .catch(err => console.log("/dashboard error2: ", err));
         })
         .catch(err => console.log("/dashboard error: ", err));
     });
