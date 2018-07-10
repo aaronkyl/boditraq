@@ -3,26 +3,29 @@
 <html>
     <header>
         <title>{% block title %}{% endblock %}</title>
+        <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700|Raleway:300,400,700|Special+Elite" rel="stylesheet">
         <link rel="stylesheet" href="style/base.css" type="text/css">
         {% block headItems %}{% endblock %}
     </header>
     <body>
         <nav>
             <div>
-                <a href="/">BodiTraq</a>
+                <a href="/" class="red-background-hover"><h1>BodiTraq</h1></a>
             </div>
             <div>
                 {% if session.passport.user %}
-                    <a href="/dashboard">Dashboard</a>
-                    <a href="/track">Enter New Measurements</a>
-                    <a href="/account">Account</a>
-                    <a href="/logout">Logout</a>
+                    <a href="/dashboard" class="yellow-background-hover"><p>Dashboard</p></a>
+                    <a href="/track" class="green-background-hover"><p>Enter New Measurements</p></a>
+                    <a href="/account" class="blue-background-hover"><p>Account</p></a>
+                    <a href="/logout" class="purple-background-hover"><p>Logout</p></a>
                 {% else %}
-                    <a href="/login">Login</a>
-                    <a href="/register">Register</a>
+                    <a href="/login" class="orange-background-hover"><p>Login</p></a>
+                    <a href="/register" class="red-background-hover"><p>Register</p></a>
                 {% endif %}
             </div>
         </nav>
-        {% block body %}{% endblock %}
+        <div id="block-body">
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>

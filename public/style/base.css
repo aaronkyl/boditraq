@@ -1,4 +1,101 @@
+/** {*/
+/*    border: 1px solid white;*/
+/*}*/
+
+html {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    background-color: #222;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+}
+
 nav {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    /*padding: 35px 25px 35px 25px;*/
+    background-color: #181818;
+    height: 140px;
+}
+
+#block-body {
+    padding: 0 50px;
+}
+
+nav a {
+    text-decoration: none;
+    transition: background-color 0.5s ease,
+                color 0.5s ease;
+}
+
+nav a:hover {
+    color: red;
+}
+
+nav div:first-child {
+    margin: 0 25px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    font-family: 'Special Elite', sans-serif;
+    margin-left: 25px;
+}
+
+nav div:first-child a {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+}
+
+nav div:nth-child(2) {
+    margin: 0 25px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    font-family: 'Confortaa', sans-serif;
+}
+
+nav div:nth-child(2) a {
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.red-background-hover:hover {
+    background-color: red;
+    color: #181818;
+}
+
+.orange-background-hover:hover {
+    background-color: orange;
+    color: #181818;
+}
+
+.yellow-background-hover:hover {
+    background-color: yellow;
+    color: #181818;
+}
+
+.green-background-hover:hover {
+    background-color: green;
+    color: #181818;
+}
+
+.blue-background-hover:hover {
+    background-color: blue;
+    color: white;
+}
+
+.purple-background-hover:hover {
+    background-color: purple;
+    color: #181818;
 }

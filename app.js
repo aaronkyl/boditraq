@@ -44,7 +44,6 @@ passport.use(new LocalStrategy((username, password, done) => {
     const password_hash = pbkdf2.pbkdf2Sync(password, salt, 1, 32, 'sha256');
     return db.one("SELECT id, username, firstname, lastname, email FROM users WHERE username=$1 AND password_hash=$2", [username.toLowerCase(), password_hash])
       .then((result)=> {
-          console.log("SUCCESS: ", result);
           return done(null, result);
       })
       .catch((err) => {
@@ -54,12 +53,10 @@ passport.use(new LocalStrategy((username, password, done) => {
 }));
 
 passport.serializeUser((user, done)=>{
-    console.log("serialize ", user);
     done(null, user.id);
 });
 
 passport.deserializeUser((id, done)=>{
-    console.log("deserializeUser id: ", id);
     db.one("SELECT id, username, email FROM users " +
             "WHERE id = $1", [id])
     .then((user)=>{
@@ -118,7 +115,6 @@ app.route('/register')
     
         db.result(insertQuery, newRecord)
         .then(data => {
-            console.log('SUCCESS! ', data.rows[0]);
             return data.rows[0];
         })
         .then(user => {
@@ -132,7 +128,7 @@ app.route('/register')
                 }
             });
         })
-        .catch(error => console.log('ERROR: ', error));
+        .catch(error => console.log('Register ERROR: ', error));
         
         resp.redirect('/');
     });
@@ -230,13 +226,46 @@ app.route('/track')
         .catch(err => console.log("/track session insert error: ", err));
     });
 
-app.get('/account', (req, resp) => resp.redirect('/'));
+app.route('/account')
+    .get(loggedIn, (req, resp) => {
+        db.one("SELECT firstname, lastname, email, password_hash FROM users WHERE id = $1", [req.session.passport.user])
+        .then(data => {
+            resp.render('account.html', {userinfo: data});
+        })
+        .catch((err) => {
+            console.log("account", err);
+            resp.redirect('/login');
+        });
+    });
+
+app.route('/rename')
+    .post(loggedIn, (req, resp) => {
+        db.none("\
+        UPDATE users \
+        SET firstname = ${firstname}, \
+            lastname = ${lastname} \
+        WHERE id = ${user_id}", { 
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        user_id: req.session.passport.user
+        })
+        .then((req, resp) => resp.redirect('/account'))
+        .catch(err => console.log("rename error: ", err));
+    });
+
+app.route('/change_password')
+    .post(loggedIn, (req, resp) => {
+        
+    });
 
 app.route('/logout')
     .get((req, resp) => {
         req.logout();
         resp.redirect('/');
     });
+
+app.route('/*')
+    .get((req, resp) => resp.redirect('/'));
 
 
 const port = process.env.PORT || 8080;
