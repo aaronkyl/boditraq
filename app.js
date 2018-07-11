@@ -2,9 +2,9 @@ const express = require('express');
 const nunjucks = require('nunjucks');
 const pgp = require('pg-promise')({});
 // dev
-//const db = pgp({database: 'boditraq', user: 'postgres'});
+const db = pgp({database: 'boditraq', user: 'postgres'});
 // prod
-const db = pgp(process.env.DATABASE_URL);
+// const db = pgp(process.env.DATABASE_URL);
 const session = require('express-session');
 const pbkdf2 = require('pbkdf2');
 const body_parser = require('body-parser');
@@ -176,7 +176,7 @@ app.route('/dashboard')
                 if (!containsObject(record.session_id, allSessions)) {
                     allSessions.push({
                         session_id: record.session_id,
-                        sysdate: record.sysdate,
+                        sysdate: record.sysdate.toString().split(' ').splice(0,4).join(' '),
                         record_count: record.record_count,
                         measurements: new Array(9)
                     });
@@ -190,6 +190,7 @@ app.route('/dashboard')
             return allSessions;
         })
         .then(sessions => {
+            console.log(sessions);
             const allSessions = sessions;
             const measurementLiterals = [];
             
@@ -368,5 +369,5 @@ app.route('/*')
 
 const port = process.env.PORT || 8080;
 app.listen(port, function() {
-    console.log('Listening on port 8080');
+    console.log('Listening on port ', port);
 });
