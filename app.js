@@ -1,7 +1,10 @@
 const express = require('express');
 const nunjucks = require('nunjucks');
 const pgp = require('pg-promise')({});
-const db = pgp({database: 'boditraq', user: 'postgres'});
+// dev
+//const db = pgp({database: 'boditraq', user: 'postgres'});
+// prod
+const db = pgp(process.env.DATABASE_URL);
 const session = require('express-session');
 const pbkdf2 = require('pbkdf2');
 const body_parser = require('body-parser');
