@@ -4,13 +4,28 @@
     Track
 {% endblock %}
 
+{% block headItems %}
+    <link rel="stylesheet" href="style/track.css" type="text/css">
+{% endblock %}
+
 {% block body %}
     <p>Weight is required</p>
     <form action="/track" method="POST">
+        <select name="measurement_units">
+            {% for unit in units %}
+                <option value="{{ unit.id }}" {% if unit.literal == "Imperial" %} selected {% endif %}>{{ unit.literal }}</option>
+            {% endfor %}
+        </select>
     {% for measurement in measurements %}
         <div class="measurement-input-container">
             <label for="{{ measurement.id }}">{{ measurement.body_measurement_literal }}</label>
             <input name="{{ measurement.id }}" {% if measurement.body_measurement_literal == "Weight" %} required {% endif %}>
+            <!--Need jQuery to change this based on above unit selection -->
+            {% if measurement.body_measurement_literal == "Weight" %}
+                <p class="units">lbs</p>
+            {% else %}
+                <p class="units">in</p>
+            {% endif %}
         </div>
     {% endfor %}
     <button type="submit">Submit</button>

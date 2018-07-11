@@ -103,6 +103,11 @@ function containsObject(objID, list) {
     return false;
 }
 
+function capitalize(s)
+{
+    return s[0].toUpperCase() + s.slice(1);
+}
+
 app.route('/')
     .get((req, resp) => {
         resp.render('index.html', {user: JSON.stringify(req.user)});
@@ -111,8 +116,24 @@ app.route('/')
    
 app.route('/login')
     .get((req, resp) => resp.render('login.html', {success: req.flash('success'), info: req.flash('info'), error: req.flash('error')}))
-    .post(passport.authenticate('local'), (req, resp) => {
-        resp.redirect('/dashboard');
+    .post((req, resp, next) => {
+        passport.authenticate('local', function(err, user, info) {
+            if (err) { 
+                req.flash('error', info.message);
+                resp.redirect('/login');
+            }
+            if (!user) {
+                req.flash('error', info.message);
+                resp.redirect('/login');
+            }
+            req.logIn(user, function(err) {
+                if (err) { 
+                    req.flash('error', info.message);
+                    resp.redirect('/login');
+                }
+                resp.redirect('/dashboard');
+            });
+        })(req, resp, next);
     });  
     
 app.route('/register')
@@ -148,9 +169,13 @@ app.route('/register')
 
 app.route('/dashboard')
     .get(loggedIn, (req, resp) => {
-        
-        console.log(req.session);
-        
+        //format measurement data based on units selection from the page - imp vs met
+        let units = '';
+        if (req.query.units) {
+            units = capitalize(req.query.units);
+        } else {
+            units = 'Imperial';
+        }
         const selectQuery = "\
             SELECT \
                 sub.session_id, \
@@ -158,7 +183,8 @@ app.route('/dashboard')
                 sub.record_count, \
                 bmc.body_measurement_literal as literal, \
                 bmc.sort_order, \
-                ubm.measurement \
+                ubm.measurement, \
+                muc.literal as units_literal \
             FROM user_body_measurements ubm \
             INNER JOIN ( \
                 SELECT ubm.user_measurement_sessions_id AS session_id, ums.sysdate, COUNT(*) as record_count \
@@ -167,7 +193,8 @@ app.route('/dashboard')
                 WHERE ums.user_id = ${user_id} \
                 GROUP BY ubm.user_measurement_sessions_id, ums.sysdate \
                 ) sub on sub.session_id = ubm.user_measurement_sessions_id \
-            INNER JOIN body_measurements_cd bmc ON bmc.id = ubm.body_measurements_cd_id";
+            INNER JOIN body_measurements_cd bmc ON bmc.id = ubm.body_measurements_cd_id \
+            INNER JOIN measurement_units_cd muc ON muc.id = ubm.units_id";
         const queryParams = {user_id: req.user.id};
         db.any(selectQuery, queryParams)
         .then(sessions => {
@@ -178,41 +205,69 @@ app.route('/dashboard')
                         session_id: record.session_id,
                         sysdate: record.sysdate.toString().split(' ').splice(0,4).join(' '),
                         record_count: record.record_count,
-                        measurements: new Array(9)
+                        measurements: new Array(9),
+                        units: record.units_literal
                     });
                 }
                 for (let i = 0; i < allSessions.length; i++) {
                     if (allSessions[i].session_id == record.session_id) {
-                        allSessions[i].measurements[record.sort_order - 1] = record.measurement;
+                        let measurement = 0;
+                        if (units == 'Imperial' && allSessions[i].units == 'Metric') {
+                            if (record.sort_order == 1) {
+                                // kgs to lbs
+                                measurement = parseFloat((record.measurement / 0.45359237).toFixed(1));
+                            } else {
+                                // cm to inches
+                                measurement = parseFloat((record.measurement / 2.54).toFixed(1));
+                            }
+                        } else if (units == 'Metric' && allSessions[i].units == 'Imperial') {
+                            if (record.sort_order == 1) {
+                                // lbs to kg
+                                measurement = parseFloat((record.measurement * 0.45359237).toFixed(1));
+                            } else {
+                                // inches to cm
+                                measurement = parseFloat((record.measurement * 2.54).toFixed(1));
+                            }
+                        } else {
+                            measurement = parseFloat((record.measurement * 1).toFixed(1));
+                        }
+                        allSessions[i].measurements[record.sort_order - 1] = measurement;
                     }
                 }
             });
             return allSessions;
         })
         .then(sessions => {
-            console.log(sessions);
             const allSessions = sessions;
             const measurementLiterals = [];
             
             db.query("SELECT * FROM body_measurements_cd ORDER BY sort_order")
             .then(data => {
                 for (let i = 0, l = data.length; i < l; i++) {
-                    measurementLiterals.push(data[i].body_measurement_literal);
+                    measurementLiterals.push(data[i].body_measurement_literal.toUpperCase());
                 }
             })
             .then(() => {
-                resp.render('dashboard.html', {sessions: allSessions, measurementLiterals: measurementLiterals});
+                resp.render('dashboard.html', {sessions: allSessions, measurementLiterals: measurementLiterals, units: units});
             })
             .catch(err => console.log("/dashboard error2: ", err));
         })
-        .catch(err => console.log("/dashboard error: ", err));
+        .catch(err => {
+            console.log("/dashboard error: ", err);
+            req.flash('error', 'You must be logged in to access this page');
+            resp.redirect('/login');
+        });
     });
 
 app.route('/track')
     .get(loggedIn, (req,resp) => {
-        db.any('SELECT * FROM body_measurements_cd')
+        db.any('SELECT * FROM body_measurements_cd ORDER BY sort_order')
         .then(data => {
-            resp.render('track.html', {measurements: data});
+            db.any('SELECT * FROM measurement_units_cd')
+            .then(units => {
+                resp.render('track.html', {measurements: data, units: units});
+            })
+            .catch(err => console.log("/track units error: ", err));
         })
         .catch(err => console.log("/track error: ", err));
     })
@@ -220,14 +275,17 @@ app.route('/track')
         db.one("INSERT INTO user_measurement_sessions VALUES (default, $1, $2) RETURNING id", [req.user.id, new Date()])
         .then(data => {
             let session_id = data.id;
+            let units_id = parseInt(req.body.measurement_units, 10);
+            console.log(units_id, typeof units_id);
             for (let prop in req.body) {
                 if (req.body[prop]) {
                     db.query('INSERT INTO user_body_measurements \
-                    VALUES (default, ${user_measurement_sessions_id}, ${body_measurements_cd_id}, ${measurement})',
+                    VALUES (default, ${user_measurement_sessions_id}, ${body_measurements_cd_id}, ${measurement}, ${units_id})',
                     { 
                         user_measurement_sessions_id: session_id,
                         body_measurements_cd_id: prop,
-                        measurement: req.body[prop]
+                        measurement: req.body[prop],
+                        units_id: units_id
                     })
                     .catch(err => console.log("/track measurement insert error: ", err));
                 }
@@ -292,7 +350,7 @@ app.route('/change_password')
     
 app.route('/reset_password')
     .get((req, resp) => resp.render('reset_password.html'))
-    .post((req, resp, next) => {
+    .post(loggedIn, (req, resp, next) => {
         const new_password = Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
         const new_hash = pbkdf2.pbkdf2Sync(new_password, salt, 1, 32, 'sha256');
         const email = req.body.email;

@@ -9,20 +9,46 @@
 {% endblock %}
 
 {% block body %}
-    <table>
-        <tr>
-            <th>Session</th>
-            {% for literal in measurementLiterals %}
-                <th>{{ literal }}</th>
+    <div id="dashboard">
+        <div id="chart-container">
+            <canvas id="resultsChart"></canvas>
+        </div>
+        <select>
+            <option value="imperial" {% if units == 'Imperial' %}selected{% endif %}>Imperial</option>
+            <option value="metric" {% if units == 'Metric' %}selected{% endif %}>Metric</option>
+        </select>
+        <table>
+            <tr>
+                <th>Session</th>
+                {% for literal in measurementLiterals %}
+                    {% if units == 'Imperial' %}
+                        {% if literal == 'WEIGHT' %}
+                            <th>{{ literal }}<br><span class="th-units">( lbs )</span></th>
+                        {% else %}
+                            <th>{{ literal }}<br><span class="th-units">( in )</span></th>
+                        {% endif %}
+                    {% else %}
+                        {% if literal == 'WEIGHT' %}
+                            <th>{{ literal }}<br><span class="th-units">( kgs )</span></th>
+                        {% else %}
+                            <th>{{ literal }}<br><span class="th-units">( cm )</span></th>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% for session in sessions %}
+            <tr>
+                <td>{{ session.sysdate }}</td>
+                {% for measurement in session.measurements %}
+                    <td>{{ measurement }}</td>
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-        {% for session in sessions %}
-        <tr>
-            <td>{{ session.sysdate }}</td>
-            {% for measurement in session.measurements %}
-                <td>{{ measurement }}</td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </table>
+        </table>    
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="script/dashboard.js"></script>
 {% endblock %}
