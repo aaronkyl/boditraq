@@ -8,6 +8,8 @@ const body_parser = require('body-parser');
 require('dotenv').config();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const flash = require('connect-flash');
+const AWS = require('aws-sdk');
 
 const app = express();
 let salt = process.env.SALT;
@@ -17,18 +19,26 @@ nunjucks.configure('views', {
   express: app,
   noCache: true
 });
+//https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES.html
+const  awsKey = process.env.AWS_ACCESS_KEY;
+const awsSecretKey = process.env.AWS_SECRET_KEY;
+AWS.config.update({
+    region: 'us-east-1',
+    accessKeyId: awsKey,
+    secretAccessKey: awsSecretKey
+});
 
 app.use(express.static('public'));
 app.use(body_parser.urlencoded({extended: true}));
 app.use(session({
-  secret: process.env.SECRET_KEY || 'dev',
+  secret: process.env.SESSION_SECRET_KEY || 'dev',
   resave: true,
   saveUninitialized: false,
   cookie: {maxAge: 3600000}
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 // adding to allow Passport data to be accessible in Nunjucks templates
 // https://stackoverflow.com/a/19070292/6415693
@@ -97,7 +107,7 @@ app.route('/')
     .post((req, resp) => resp.redirect('/'));
    
 app.route('/login')
-    .get((req, resp) => resp.render('login.html'))
+    .get((req, resp) => resp.render('login.html', {success: req.flash('success'), info: req.flash('info'), error: req.flash('error')}))
     .post(passport.authenticate('local'), (req, resp) => {
         resp.redirect('/dashboard');
     });  
@@ -182,13 +192,11 @@ app.route('/dashboard')
             
             db.query("SELECT * FROM body_measurements_cd ORDER BY sort_order")
             .then(data => {
-                console.log(data);
                 for (let i = 0, l = data.length; i < l; i++) {
                     measurementLiterals.push(data[i].body_measurement_literal);
                 }
             })
             .then(() => {
-                console.log("allSessions\n", allSessions);
                 resp.render('dashboard.html', {sessions: allSessions, measurementLiterals: measurementLiterals});
             })
             .catch(err => console.log("/dashboard error2: ", err));
@@ -230,7 +238,7 @@ app.route('/account')
     .get(loggedIn, (req, resp) => {
         db.one("SELECT firstname, lastname, email, password_hash FROM users WHERE id = $1", [req.session.passport.user])
         .then(data => {
-            resp.render('account.html', {userinfo: data});
+            resp.render('account.html', {userinfo: data, success: req.flash('success'), info: req.flash('info'), error: req.flash('error')});
         })
         .catch((err) => {
             console.log("account", err);
@@ -241,21 +249,108 @@ app.route('/account')
 app.route('/rename')
     .post(loggedIn, (req, resp) => {
         db.none("\
-        UPDATE users \
-        SET firstname = ${firstname}, \
-            lastname = ${lastname} \
-        WHERE id = ${user_id}", { 
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        user_id: req.session.passport.user
+            UPDATE users \
+            SET firstname = ${firstname}, \
+                lastname = ${lastname} \
+            WHERE id = ${user_id}", { 
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            user_id: req.session.passport.user
         })
-        .then((req, resp) => resp.redirect('/account'))
+        .then(() => {
+            req.flash('success', 'Name updated');
+            resp.redirect('/account');
+        })
         .catch(err => console.log("rename error: ", err));
     });
 
 app.route('/change_password')
     .post(loggedIn, (req, resp) => {
-        
+        if (req.body.password == req.body.password_confirm) {
+            let new_hash = pbkdf2.pbkdf2Sync(req.body.password, salt, 1, 32, 'sha256');
+            db.none("\
+                UPDATE users \
+                SET password_hash = ${new_hash} \
+                WHERE id = ${user_id}", { 
+                new_hash: new_hash,
+                user_id: req.session.passport.user
+            })
+            .then(() => {
+                req.flash('success', 'Password changed');
+                resp.redirect('/account');
+            })
+            .catch(err => console.log("rename error: ", err));
+        } else {
+            req.flash('error', 'Password entries must match');
+            resp.redirect('/account');
+        }
+    });
+    
+app.route('/reset_password')
+    .get((req, resp) => resp.render('reset_password.html'))
+    .post((req, resp, next) => {
+        const new_password = Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
+        const new_hash = pbkdf2.pbkdf2Sync(new_password, salt, 1, 32, 'sha256');
+        const email = req.body.email;
+        db.none("\
+            UPDATE users \
+            SET password_hash = ${new_hash} \
+            WHERE email = ${email}", {
+            new_hash: new_hash, 
+            email: email
+        })
+        .then(() => {
+            //email new password to user
+            
+            var params = {
+              Destination: { /* required */
+                CcAddresses: [],
+                ToAddresses: ['aaronwilkinson@gmail.com']
+              },
+              Message: { /* required */
+                Body: { /* required */
+                  Html: {
+                   Charset: "UTF-8",
+                   Data: "Your <a href='http://www.boditraq.com'>BodiTraq</a> password has been reset to " + new_password +". \n\
+                          You can change it using the Account page once you log in."
+                  },
+                  Text: {
+                   Charset: "UTF-8",
+                   Data: "Your BodiTraq password has been reset to " + new_password +". \n\
+                          You can change it using the Account page once you log in."
+                  }
+                 },
+                 Subject: {
+                  Charset: 'UTF-8',
+                  Data: 'BodiTraq Password Reset'
+                 }
+                },
+              Source: 'aaronwilkinson@gmail.com', /* required */
+              ReplyToAddresses: [
+                  'aaronwilkinson@gmail.com'
+              ],
+            };       
+            
+            // Create the promise and SES service object
+            var sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(params).promise();
+            
+            // Handle promise's fulfilled/rejected states
+            sendPromise.then(
+              function(data) {
+                console.log("reset email sent ", data.MessageId);
+              }).catch(
+                function(err) {
+                console.error(err, err.stack);
+              });
+        })
+        .then(() => {
+            req.flash('success', 'New password has been emailed to you');
+            resp.redirect('/login');
+        })
+        .catch(err => {
+            console.log('password reset error', err);
+            next(err);
+        });
     });
 
 app.route('/logout')
