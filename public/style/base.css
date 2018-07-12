@@ -26,6 +26,7 @@ nav {
 
 #block-body {
     padding: 0 50px;
+    height: calc(100% - 100px);
 }
 
 nav a {
