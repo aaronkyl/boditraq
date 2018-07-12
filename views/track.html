@@ -9,25 +9,46 @@
 {% endblock %}
 
 {% block body %}
-    <p>Weight is required</p>
-    <form action="/track" method="POST">
-        <select name="measurement_units">
-            {% for unit in units %}
-                <option value="{{ unit.id }}" {% if unit.literal == "Imperial" %} selected {% endif %}>{{ unit.literal }}</option>
-            {% endfor %}
-        </select>
-    {% for measurement in measurements %}
-        <div class="measurement-input-container">
-            <label for="{{ measurement.id }}">{{ measurement.body_measurement_literal }}</label>
-            <input name="{{ measurement.id }}" {% if measurement.body_measurement_literal == "Weight" %} required {% endif %}>
-            <!--Need jQuery to change this based on above unit selection -->
-            {% if measurement.body_measurement_literal == "Weight" %}
-                <p class="units">lbs</p>
-            {% else %}
-                <p class="units">in</p>
-            {% endif %}
+    <div class="track-container">
+        <p>Weight is required</p>
+        <div class="inner-track-container">
+            <div class="form-div">
+                <form action="/track" method="POST">
+                    <select name="measurement_units">
+                        {% for unit in units %}
+                            <option value="{{ unit.id }}" {% if unit.literal == unitsOfMeasure %}selected {% endif %}>{{ unit.literal }}</option>
+                        {% endfor %}
+                    </select>
+                    {% for measurement in measurements %}
+                        <div class="measurement-input-container">
+                            <label for="{{ measurement.id }}">{{ measurement.body_measurement_literal }}</label>
+                            <input name="{{ measurement.id }}" type="number" step="0.1" min="0" autocomplete="off" {% if measurement.body_measurement_literal == "Weight" %} required {% endif %}>
+                            <!--Need jQuery to change this based on above unit selection -->
+                            {% if unitsOfMeasure == "Imperial" %}
+                                {% if measurement.body_measurement_literal == "Weight" %}
+                                    <p class="units {{ measurement.id }}">lbs</p>
+                                {% else %}
+                                    <p class="units {{ measurement.id }}">in</p>
+                                {% endif %}
+                            {% else %}
+                                {% if measurement.body_measurement_literal == "Weight" %}
+                                    <p class="units {{ measurement.id }}">kg</p>
+                                {% else %}
+                                    <p class="units {{ measurement.id }}">cm</p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <input name="user_date" id="user-date" hidden>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="track-img">
+            </div> 
         </div>
-    {% endfor %}
-    <button type="submit">Submit</button>
-    </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="script/track.js"></script>
 {% endblock %}

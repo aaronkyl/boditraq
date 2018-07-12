@@ -3,45 +3,40 @@ $(document).ready(function() {
         window.location.replace('/dashboard?units=' + $('select').val());
     });
     
+    var datasets = $('#chartData').data().other.datasets;
+    var labels = $('#chartData').data().other.labels;
+    
+    console.log('datasets: ', datasets);
+    
     var ctx = document.getElementById("resultsChart");
     var myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: '# of Votes',
-                borderColor: '#D34F56',
-                fill: false,
-                data: [12, 10, , 5, 2, 3],
-                yAxisID: 'y-axis-1'
-            },
-            {
-                label:'other',
-                borderColor: '#818B43',
-                fill: false,
-                data:[null, null, 5,6,7,2],
-                yAxisID: 'y-axis-2'
-            }]
+            labels: labels,
+            datasets: datasets
         },
         options: {
             spanGaps: true,
+            responsive: true,
+            hoverMode: 'index',
+            maintainAspectRatio: false,
             scales: {
                 yAxes: [{
-							type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-							display: true,
-							position: 'left',
-							id: 'y-axis-1',
-						}, {
-							type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-							display: true,
-							position: 'right',
-							id: 'y-axis-2',
+					type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+					display: true,
+					position: 'left',
+					id: 'y-axis-weight',
+				}, {
+					type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+					display: true,
+					position: 'right',
+					id: 'y-axis-length',
 
-							// grid line settings
-							gridLines: {
-								drawOnChartArea: true, // only want the grid lines for one axis to show up
-							},
-						}]
+					// grid line settings
+					gridLines: {
+						drawOnChartArea: false, // only want the grid lines for one axis to show up
+					},
+				}]
             }
         }
     });

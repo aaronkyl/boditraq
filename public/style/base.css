@@ -21,7 +21,7 @@ nav {
     align-items: center;
     /*padding: 35px 25px 35px 25px;*/
     background-color: #181818;
-    height: 140px;
+    height: 100px;
 }
 
 #block-body {
@@ -40,7 +40,7 @@ nav a:hover {
 
 nav div:first-child {
     margin: 0 25px;
-    height: 140px;
+    height: 100px;
     display: flex;
     align-items: center;
     font-size: 30px;
@@ -57,7 +57,7 @@ nav div:first-child a {
 
 nav div:nth-child(2) {
     margin: 0 25px;
-    height: 140px;
+    height: 100px;
     display: flex;
     align-items: center;
     font-family: 'Confortaa', sans-serif;
@@ -107,4 +107,10 @@ input {
 .purple-background-hover:hover {
     background-color: purple;
     color: #181818;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }

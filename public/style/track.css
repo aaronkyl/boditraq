@@ -1,3 +1,98 @@
 p {
     display: inline-block;
 }
+
+label {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+}
+
+input {
+    width: 3em;
+    text-align: center;
+    margin-right: .5em;
+    margin-left: 1em;
+}
+
+input:focus {
+    outline: none;
+    border-bottom: 2px solid limegreen;
+}
+
+.focused {
+    color: limegreen;
+}
+
+.track-container {
+    max-width: 960px;
+    margin: auto;
+}
+
+.inner-track-container {
+    display: flex;
+}
+
+.form-div {
+    width: 50%;
+}
+
+form {
+    width: 20em;
+    margin: auto;
+}
+
+.track-img {
+    background-image: url("../img/human_img_waist.png"), 
+                      url("../img/human_img_bicep.png"),
+                      url("../img/human_img_chest.png"),
+                      url("../img/human_img_shoulders.png"),
+                      url("../img/human_img_forearm.png"),
+                      url("../img/human_img_thighs.png"),
+                      url("../img/human_img_calves.png"),
+                      url("../img/human_img_neck.png");
+  background-position: -9999px -9999px;
+}
+
+.track-img {
+    height: 600px;
+    width: 50%;
+    background-image: url("../img/human_img.png");
+    background-position: right;
+}
+
+.track1 {
+    /*background-image: url("../img/human_img_neck.png");*/
+}
+
+.track2 {
+    background-image: url("../img/human_img_waist.png");
+}
+
+.track3 {
+    background-image: url("../img/human_img_bicep.png");
+}
+
+.track4 {
+    background-image: url("../img/human_img_chest.png");
+}
+
+.track5 {
+    background-image: url("../img/human_img_shoulders.png");
+}
+
+.track6 {
+    background-image: url("../img/human_img_forearm.png");
+}
+
+.track7 {
+    background-image: url("../img/human_img_thigh.png");
+}
+
+.track8 {
+    background-image: url("../img/human_img_calves.png");
+}
+
+.track9 {
+    background-image: url("../img/human_img_neck.png");
+}

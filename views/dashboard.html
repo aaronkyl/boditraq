@@ -6,6 +6,7 @@
 
 {% block headItems %}
     <link rel="stylesheet" href="style/dashboard.css" type="text/css">
+    <meta id="chartData" data-other="{{ chartData }}">
 {% endblock %}
 
 {% block body %}
@@ -13,38 +14,42 @@
         <div id="chart-container">
             <canvas id="resultsChart"></canvas>
         </div>
-        <select>
-            <option value="imperial" {% if units == 'Imperial' %}selected{% endif %}>Imperial</option>
-            <option value="metric" {% if units == 'Metric' %}selected{% endif %}>Metric</option>
-        </select>
-        <table>
-            <tr>
-                <th>Session</th>
-                {% for literal in measurementLiterals %}
-                    {% if units == 'Imperial' %}
-                        {% if literal == 'WEIGHT' %}
-                            <th>{{ literal }}<br><span class="th-units">( lbs )</span></th>
+        <div>
+            <select>
+                <option value="imperial" {% if units == 'Imperial' %}selected{% endif %}>Imperial</option>
+                <option value="metric" {% if units == 'Metric' %}selected{% endif %}>Metric</option>
+            </select>
+        </div>
+        <div class='scrollable-table-container'>
+            <table>
+                <tr class='table-header'>
+                    <th>Session</th>
+                    {% for literal in measurementLiterals %}
+                        {% if units == 'Imperial' %}
+                            {% if literal == 'WEIGHT' %}
+                                <th>{{ literal }}<br><span class="th-units">( lbs )</span></th>
+                            {% else %}
+                                <th>{{ literal }}<br><span class="th-units">( in )</span></th>
+                            {% endif %}
                         {% else %}
-                            <th>{{ literal }}<br><span class="th-units">( in )</span></th>
+                            {% if literal == 'WEIGHT' %}
+                                <th>{{ literal }}<br><span class="th-units">( kgs )</span></th>
+                            {% else %}
+                                <th>{{ literal }}<br><span class="th-units">( cm )</span></th>
+                            {% endif %}
                         {% endif %}
-                    {% else %}
-                        {% if literal == 'WEIGHT' %}
-                            <th>{{ literal }}<br><span class="th-units">( kgs )</span></th>
-                        {% else %}
-                            <th>{{ literal }}<br><span class="th-units">( cm )</span></th>
-                        {% endif %}
-                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% for session in sessions %}
+                <tr>
+                    <td>{{ session.sysdate }}</td>
+                    {% for measurement in session.measurements %}
+                        <td>{{ measurement }}</td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-            {% for session in sessions %}
-            <tr>
-                <td>{{ session.sysdate }}</td>
-                {% for measurement in session.measurements %}
-                    <td>{{ measurement }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>    
+            </table>
+        </div>
     </div>
 {% endblock %}
 

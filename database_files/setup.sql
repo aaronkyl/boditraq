@@ -33,13 +33,14 @@ CREATE TABLE user_body_measurements (
 );
 
 INSERT INTO body_measurements_cd VALUES (default, 'Weight', 1);
+INSERT INTO body_measurements_cd VALUES (default, 'Neck', 2);
+INSERT INTO body_measurements_cd VALUES (default, 'Shoulders', 3);
+INSERT INTO body_measurements_cd VALUES (default, 'Chest', 4);
 INSERT INTO body_measurements_cd VALUES (default, 'Waist', 5);
 INSERT INTO body_measurements_cd VALUES (default, 'Bicep', 6);
-INSERT INTO body_measurements_cd VALUES (default, 'Chest', 4);
-INSERT INTO body_measurements_cd VALUES (default, 'Shoulders', 3);
 INSERT INTO body_measurements_cd VALUES (default, 'Forearm', 7);                                                
 INSERT INTO body_measurements_cd VALUES (default, 'Thigh', 8);                                                  
 INSERT INTO body_measurements_cd VALUES (default, 'Calf', 9);
-INSERT INTO body_measurements_cd VALUES (default, 'Neck', 2);
+
 INSERT INTO measurement_units_cd VALUES (default, 'Imperial');
 INSERT INTO measurement_units_cd VALUES (default, 'Metric');

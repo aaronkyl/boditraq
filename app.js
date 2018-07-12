@@ -194,7 +194,8 @@ app.route('/dashboard')
                 GROUP BY ubm.user_measurement_sessions_id, ums.sysdate \
                 ) sub on sub.session_id = ubm.user_measurement_sessions_id \
             INNER JOIN body_measurements_cd bmc ON bmc.id = ubm.body_measurements_cd_id \
-            INNER JOIN measurement_units_cd muc ON muc.id = ubm.units_id";
+            INNER JOIN measurement_units_cd muc ON muc.id = ubm.units_id \
+            ORDER BY sub.session_id";
         const queryParams = {user_id: req.user.id};
         db.any(selectQuery, queryParams)
         .then(sessions => {
@@ -240,6 +241,7 @@ app.route('/dashboard')
         .then(sessions => {
             const allSessions = sessions;
             const measurementLiterals = [];
+            const colors = ['#F00', '#FF8000', '#FF0', '#0F0', '#0FF', '#0080FF', '#7F00FF', '#F0F', '#FFF'];
             
             db.query("SELECT * FROM body_measurements_cd ORDER BY sort_order")
             .then(data => {
@@ -248,7 +250,44 @@ app.route('/dashboard')
                 }
             })
             .then(() => {
-                resp.render('dashboard.html', {sessions: allSessions, measurementLiterals: measurementLiterals, units: units});
+                // **********
+                // chart data creation
+                
+                const xAxesValues = [];
+                const dataSetsData = new Array(measurementLiterals.length).fill(0).map(x => new Array());
+
+                allSessions.forEach(session => {
+                    xAxesValues.push(session.sysdate);
+                    for (let i = 0, l = session.measurements.length; i < l; i++) {
+                        dataSetsData[i].push(session.measurements[i]);                    }
+                });
+                
+                const datasets = [];
+                
+                for (let i = 0, l = dataSetsData.length; i < l; i++) {
+                    let obj = {
+                        label: measurementLiterals[i],
+                        borderColor: colors[i],
+                        backgroundColor: colors[i],
+                        fill: false,
+                        data: dataSetsData[i]
+                    }
+                    if (i==0) {
+                        obj['yAxisID'] = 'y-axis-weight';
+                    } else {
+                        obj['yAxisID'] = 'y-axis-length';
+                    }
+                    datasets.push(obj);
+                }
+                
+                console.log(datasets);
+                
+                const chartData = {
+                    labels: xAxesValues,
+                    datasets: datasets
+                };
+                // **********
+                resp.render('dashboard.html', {sessions: allSessions, measurementLiterals: measurementLiterals, units: units, chartData: JSON.stringify(chartData)});
             })
             .catch(err => console.log("/dashboard error2: ", err));
         })
@@ -261,18 +300,27 @@ app.route('/dashboard')
 
 app.route('/track')
     .get(loggedIn, (req,resp) => {
+        let unitsOfMeasure = '';
+        if (req.query.units && req.query.units == 2) {
+            unitsOfMeasure = "Metric";
+        } else {
+            unitsOfMeasure = "Imperial";   
+        }
+        
+        console.log(req.query.units, unitsOfMeasure);
         db.any('SELECT * FROM body_measurements_cd ORDER BY sort_order')
         .then(data => {
             db.any('SELECT * FROM measurement_units_cd')
             .then(units => {
-                resp.render('track.html', {measurements: data, units: units});
+                resp.render('track.html', {measurements: data, units: units, unitsOfMeasure: unitsOfMeasure});
             })
             .catch(err => console.log("/track units error: ", err));
         })
         .catch(err => console.log("/track error: ", err));
     })
     .post(loggedIn, (req, resp) => {
-        db.one("INSERT INTO user_measurement_sessions VALUES (default, $1, $2) RETURNING id", [req.user.id, new Date()])
+        let user_date = req.body.user_date.split(' ').splice(1, 3).join(' ');
+        db.one("INSERT INTO user_measurement_sessions VALUES (default, $1, $2) RETURNING id", [req.user.id, user_date])
         .then(data => {
             let session_id = data.id;
             let units_id = parseInt(req.body.measurement_units, 10);
