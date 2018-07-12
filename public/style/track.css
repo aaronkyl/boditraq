@@ -66,11 +66,11 @@ form {
 }
 
 .track2 {
-    background-image: url("../img/human_img_waist.png");
+    background-image: url("../img/human_img_neck.png");
 }
 
 .track3 {
-    background-image: url("../img/human_img_bicep.png");
+    background-image: url("../img/human_img_shoulders.png");
 }
 
 .track4 {
@@ -78,21 +78,21 @@ form {
 }
 
 .track5 {
-    background-image: url("../img/human_img_shoulders.png");
+    background-image: url("../img/human_img_waist.png");
 }
 
 .track6 {
-    background-image: url("../img/human_img_forearm.png");
+    background-image: url("../img/human_img_bicep.png");
 }
 
 .track7 {
-    background-image: url("../img/human_img_thigh.png");
+    background-image: url("../img/human_img_forearm.png");
 }
 
 .track8 {
-    background-image: url("../img/human_img_calves.png");
+    background-image: url("../img/human_img_thigh.png");
 }
 
 .track9 {
-    background-image: url("../img/human_img_neck.png");
+    background-image: url("../img/human_img_calves.png");
 }
