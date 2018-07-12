@@ -42,7 +42,7 @@ form {
     margin: auto;
 }
 
-.track-img {
+.preload {
     background-image: url("../img/human_img_waist.png"), 
                       url("../img/human_img_bicep.png"),
                       url("../img/human_img_chest.png"),
@@ -51,7 +51,6 @@ form {
                       url("../img/human_img_thighs.png"),
                       url("../img/human_img_calves.png"),
                       url("../img/human_img_neck.png");
-  background-position: -9999px -9999px;
 }
 
 .track-img {

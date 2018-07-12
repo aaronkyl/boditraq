@@ -267,6 +267,7 @@ app.route('/dashboard')
                 for (let i = 0, l = dataSetsData.length; i < l; i++) {
                     let obj = {
                         label: measurementLiterals[i],
+                        lineThickness: 1,
                         borderColor: colors[i],
                         backgroundColor: colors[i],
                         fill: false,
