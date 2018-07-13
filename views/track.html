@@ -26,18 +26,18 @@
                     </div>
                     {% for measurement in measurements %}
                         <div class="measurement-input-container">
-                            <label for="{{ measurement.id }}" {% if measurement.body_measurement_literal == "Weight" %}class="focused"{% endif %}>{{ measurement.body_measurement_literal }}</label>
-                            <input name="{{ measurement.id }}" type="number" step="0.1" min="0" autocomplete="off" {% if measurement.body_measurement_literal == "Weight" %} autofocus required {% endif %}>
+                            <label for="{{ measurement.id }}" {% if measurement.body_measurement_literal == "Weight" %}class=""{% endif %}>{{ measurement.body_measurement_literal }}</label>
+                            <input name="{{ measurement.id }}" type="number" step="0.1" min="0" autocomplete="off" {% if measurement.body_measurement_literal == "Weight" %} required {% endif %}>
                             <!--Need jQuery to change this based on above unit selection -->
                             {% if unitsOfMeasure == "Imperial" %}
                                 {% if measurement.body_measurement_literal == "Weight" %}
-                                    <p class="units {{ measurement.id }} focused">lbs</p>
+                                    <p class="units {{ measurement.id }}">lbs</p>
                                 {% else %}
                                     <p class="units {{ measurement.id }}">in</p>
                                 {% endif %}
                             {% else %}
                                 {% if measurement.body_measurement_literal == "Weight" %}
-                                    <p class="units {{ measurement.id }} focused">kg</p>
+                                    <p class="units {{ measurement.id }}">kg</p>
                                 {% else %}
                                     <p class="units {{ measurement.id }}">cm</p>
                                 {% endif %}
