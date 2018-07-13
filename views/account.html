@@ -22,8 +22,8 @@
         {% endif %}
         <h3>Update Name</h3>
         <form action="/rename" method="POST">
-            <input name="firstname" value="{{ userinfo.firstname }}" placeholder="First Name" required>
-            <input name="lastname" value="{{ userinfo.lastname }}" placeholder="Last Name" required>
+            <input name="firstname" value="{{ userinfo.firstname }}" placeholder="First Name" autocomplete="off" required>
+            <input name="lastname" value="{{ userinfo.lastname }}" placeholder="Last Name" autocomplete="off" required>
             <button type="submit">Update</button>
         </form>
         <h3>Change Password</h3>
