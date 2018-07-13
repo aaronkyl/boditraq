@@ -26,6 +26,9 @@ $(document).ready(function() {
 					display: true,
 					position: 'left',
 					id: 'y-axis-weight',
+					ticks: {
+                      fontColor: "#959595", // this here
+                    },
 				}, {
 					type: 'linear', // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
 					display: true,
@@ -36,7 +39,21 @@ $(document).ready(function() {
 					gridLines: {
 						drawOnChartArea: false, // only want the grid lines for one axis to show up
 					},
+					ticks: {
+                      fontColor: "#959595", // this here
+                    },
+				}],
+				xAxes : [{
+				    ticks: {
+                      fontColor: "#959595", // this here
+                    }
 				}]
+            },
+            legend: {
+                display: true,
+                labels: {
+                    fontColor: '#959595'
+                }
             }
         }
     });
