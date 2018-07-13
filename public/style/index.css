@@ -1,27 +1,83 @@
+body {
+    /*background-color: #25292E;*/
+    background-color: #EAEAEA;
+}
+
 #block-body {
     padding: 0;
 }
 
 #homepage-content {
-    /*height: calc(100vh - 140px);*/
     width: 100%;
-    /*background-image: url("../img/body_measurement_1920_1280.jpeg");*/
-    /*background-repeat: no-repeat;*/
-    /*background-attachment: fixed;*/
-    /*background-position: center;*/
+}
+
+#homepage-content div:first-child {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 8em;
+}
+
+#homepage-content div:nth-child(3) {
+    padding-top: 8em;
+}
+
+#homepage-content div:first-child img {
+    width: 80%;
+    max-width: 960px;
 }
 
 h2 {
-    margin-top: 0;
+    font-weight: 200;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    text-align: center;
 }
 
-.angle-left {
-    background-color: red;
+.tagline {
+    color: #191e23;
+    margin-top: 0;
+    margin-bottom: 1.5em;
+    font-weight: 400;
+}
+
+.info-h2 {
+    margin: 3em 3em;
+    line-height: 2em;
+}
+
+.img-h2 {
+    line-height: 2em;
+    padding-right: 3em;
+    color: #191e23;
+    font-weight: 300;
+}
+
+.angle-right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #25292E;
     position: relative;
     z-index: 1;
+    padding: 0 50px;
 }
 
-.angle-left:after {
+.angle-right:before {
+    background: inherit;
+    content: '';
+    display: block;
+    height: 50%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    z-index: -1;
+    top: 0;
+    transform: skewY(2deg);
+    transform-origin: 100% 0;
+}
+
+.angle-right:after {
     background: inherit;
     bottom: 0;
     content: '';
@@ -30,7 +86,43 @@ h2 {
     left: 0;
     position: absolute;
     right: 0;
-    transform: skewY(-1.5deg);
-    transform-origin: 100%;
+    transform: skewY(2deg);
+    transform-origin: 0 100%;
     z-index: -1;
+}
+
+.no-angle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px;
+}
+
+img {
+    border-radius: 10px;
+    width: 60%;
+    max-width: 700px;
+}
+
+.underlined {
+    border-bottom: 1px solid white;
+}
+.footer {
+    min-height: 8em;
+    background-color: #25292E;
+    font-weight: 100;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer a {
+    text-decoration: none;
+    color: limegreen;
+}
+
+.footer a:hover {
+    font-weight: 400;
 }

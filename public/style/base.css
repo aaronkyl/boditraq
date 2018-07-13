@@ -10,9 +10,9 @@ html {
 body {
     margin: 0;
     height: 100%;
-    /*background-color: #222;*/
-    background-color: #20262E;
-    color: #fff;
+    background-color: #EAEAEA;
+    /*background-color: #20262E;*/
+    color: #EAEAEA;
     font-family: 'Raleway', sans-serif;
 }
 
@@ -23,8 +23,7 @@ nav {
     /*background-color: #181818;*/
     background-color: #191e23;
     height: 100px;
-    transition: background-color 0.5s ease, color 0.5s ease;
-    color: white;
+    color: #EAEAEA;
 }
 
 #block-body {
@@ -71,15 +70,25 @@ nav div:nth-child(2) a {
     align-items: center;
     font-size: 1.75em;
     border-radius: 50%;
+    transition: background-color 0.5s ease;
 }
 
 input {
     height: 2em;
     border: none;
     background-color: transparent;
-    border-bottom: 2px solid white;
-    color: white;
+    border-bottom: 1px solid #EAEAEA;
+    color: #EAEAEA;
     font-size: 1.5em;
+    text-align: center;
+    caret-color: transparent;
+    font-weight: 100;
+}
+
+input:focus {
+    outline: none;
+    color: limegreen;
+    border-bottom: 2px solid limegreen;
 }
 
 .red-background-hover:hover {
@@ -118,17 +127,6 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 }
 
-input {
-    text-align: center;
-    caret-color: transparent;
-}
-
-input:focus {
-    outline: none;
-    color: limegreen;
-    border-bottom: 2px solid limegreen;
-}
-
 button[type=submit] {
     background-color: limegreen;
     border: none;
@@ -147,7 +145,7 @@ button[type=submit]:hover, button[type=submit]:focus {
 }
 
 select {
-    background-color: grey;
+    background-color: #EAEAEA;
     color: black;
     font-size: 1em;
     border: none;

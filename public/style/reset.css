@@ -1,3 +1,8 @@
+#block-body {
+    margin: 0 150px;
+    background-color: #20262E;
+}
+
 .reset-container {
     display: flex;
     justify-content: center;

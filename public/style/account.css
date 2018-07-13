@@ -1,3 +1,8 @@
+#block-body {
+    margin: 0 150px;
+    background-color: #20262E;
+}
+
 .account-container {
     max-width: 780px;
     margin: auto;
@@ -9,4 +14,14 @@ input {
 
 button {
     width: 240px;
+}
+
+h3 {
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-weight: 300;
+}
+
+form[action="/rename"] {
+    margin-bottom: 3em;
 }

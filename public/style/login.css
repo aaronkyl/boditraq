@@ -1,9 +1,14 @@
+body {
+    /*background-color: #25292E;*/
+    background-color: #EAEAEA;
+}
+
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 80%;
+    height: 100%;
 }
 
 .login-div {
@@ -11,7 +16,7 @@
     flex-direction: column;
     align-items: center;
     background-color: #191e23;
-    padding: 50px;
+    padding: 125px;
     border-radius: 50%;
 }
 

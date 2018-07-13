@@ -11,12 +11,12 @@
     <body>
         <nav>
             <div>
-                <a href="/"><h1>BodiTraq</h1></a>
+                <a href="/"><h1>boditraq</h1></a>
             </div>
             <div>
                 {% if session.passport.user %}
-                    <a href="/dashboard" class="yellow-background-hover icon" title="Dashboard"><i class="fal fa-chart-line"></i></a>
-                    <a href="/track" class="green-background-hover icon" title="Enter Measurements"><i class="fal fa-pencil-ruler"></i></a>
+                    <a href="/dashboard" class="red-background-hover icon" title="Dashboard"><i class="fal fa-chart-line"></i></a>
+                    <a href="/track" class="yellow-background-hover icon" title="Enter Measurements"><i class="fal fa-pencil-ruler"></i></a>
                     <a href="/account" class="blue-background-hover icon" title="Account"><i class="fal fa-user-cog"></i></a>
                     <a href="/logout" class="purple-background-hover icon" title="Log Out"><i class="fal fa-sign-out-alt"></i></a>
                 {% else %}

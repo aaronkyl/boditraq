@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    BodiTraq
+    boditraq
 {% endblock %}
 
 {% block headItems %}
@@ -10,19 +10,27 @@
 
 {% block body %}
     <div id="homepage-content">
-        <div class="angle-left">
-            <h2>LANDING PAGE BUILD IN PROGRESS</h2>
-            <h2>A simple, clean body measurement tracking app</h2>
-            <p></p>
+        <div class="no-angle">
+            <h2 class="tagline">Body measurement tracking - simplified</h2>
+            <img src="img/dashboard.png">
         </div>
-        <p>
-            Exercise and diet are the keys to attaining a healthy body, but physical
-            changes can be difficult to notice as they are slow and gradual. This can
-            lead to a loss of motivation to continue. BodiTraq helps by allowing you
-            to record your body measurements so that these incremental changes are
-            visible. Even when you don't feel like you're making progress, BodiTraq
-            will prove that your waist is shrinking, your arms growing, and your
-            overall body transforming.
-        </p>
+        <div class="angle-right">
+            <h2 class="info-h2">
+                Body measurement tracking provides information about 
+                how <span class="underlined">your</span> body responds to different exercise routines and 
+                nutrition plans
+            </h2>
+        </div>
+        <div class="no-angle">
+            <h2 class="img-h2">
+                When tracking is easy it's easy to track consistently
+            </h2>
+            <img src="img/track.png">
+        </div>
+        <div class="footer">
+            <p>
+                Designed and programmed by <a href="http://www.aaronkwilkinson.com" target="_blank">Aaron Wilkinson</a>
+            </p>
+        </div>
     </div>
 {% endblock %}
