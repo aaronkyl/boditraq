@@ -81,7 +81,8 @@ button {
 }
 
 .preload {
-    background-image: url("../img/human_img_waist.png"), 
+    background-image: url("../img/huma_img_weight.png"),
+                      url("../img/human_img_waist.png"), 
                       url("../img/human_img_bicep.png"),
                       url("../img/human_img_chest.png"),
                       url("../img/human_img_shoulders.png"),
