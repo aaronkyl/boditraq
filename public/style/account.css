@@ -1,0 +1,12 @@
+.account-container {
+    max-width: 780px;
+    margin: auto;
+}
+
+input {
+    margin-right: 1em;
+}
+
+button {
+    width: 240px;
+}

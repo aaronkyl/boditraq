@@ -3,8 +3,9 @@
 <html>
     <header>
         <title>{% block title %}{% endblock %}</title>
-        <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700|Raleway:300,400,700|Special+Elite" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700|Raleway:100,200,300,400,700|Special+Elite" rel="stylesheet">
         <link rel="stylesheet" href="style/base.css" type="text/css">
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-87DrmpqHRiY8hPLIr7ByqhPIywuSsjuQAfMXAE0sMUpY3BM7nXjf+mLIUSvhDArs" crossorigin="anonymous">
         {% block headItems %}{% endblock %}
     </header>
     <body>
@@ -14,13 +15,13 @@
             </div>
             <div>
                 {% if session.passport.user %}
-                    <a href="/dashboard" class="yellow-background-hover"><p>Dashboard</p></a>
-                    <a href="/track" class="green-background-hover"><p>Enter New Measurements</p></a>
-                    <a href="/account" class="blue-background-hover"><p>Account</p></a>
-                    <a href="/logout" class="purple-background-hover"><p>Logout</p></a>
+                    <a href="/dashboard" class="yellow-background-hover icon" title="Dashboard"><i class="fal fa-chart-line"></i></a>
+                    <a href="/track" class="green-background-hover icon" title="Enter Measurements"><i class="fal fa-pencil-ruler"></i></a>
+                    <a href="/account" class="blue-background-hover icon" title="Account"><i class="fal fa-user-cog"></i></a>
+                    <a href="/logout" class="purple-background-hover icon" title="Log Out"><i class="fal fa-sign-out-alt"></i></a>
                 {% else %}
-                    <a href="/login" class="orange-background-hover"><p>Log In</p></a>
-                    <a href="/register" class="red-background-hover"><p>Sign Up</p></a>
+                    <a href="/login" class="green-background-hover icon" title="Sign In"><i class="fal fa-sign-in-alt"></i></a>
+                    <a href="/register" class="orange-background-hover icon" title="Sign Up"><i class="fal fa-user-plus"></i></a>
                 {% endif %}
             </div>
         </nav>
@@ -31,6 +32,7 @@
             src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous"></script>
+        <script src="script/base.js"></script>
         {% block scripts %}{% endblock %}
     </body>
 </html>

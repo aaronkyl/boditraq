@@ -1,8 +1,36 @@
+#block-body {
+    padding: 0;
+}
+
 #homepage-content {
     /*height: calc(100vh - 140px);*/
-    /*width: 100vw;*/
+    width: 100%;
     /*background-image: url("../img/body_measurement_1920_1280.jpeg");*/
     /*background-repeat: no-repeat;*/
     /*background-attachment: fixed;*/
     /*background-position: center;*/
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.angle-left {
+    background-color: red;
+    position: relative;
+    z-index: 1;
+}
+
+.angle-left:after {
+    background: inherit;
+    bottom: 0;
+    content: '';
+    display: block;
+    height: 50%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    transform: skewY(-1.5deg);
+    transform-origin: 100%;
+    z-index: -1;
 }

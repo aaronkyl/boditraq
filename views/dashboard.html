@@ -14,12 +14,25 @@
         <div id="chart-container">
             <canvas id="resultsChart"></canvas>
         </div>
-        <div>
-            <select>
-                <option value="imperial" {% if units == 'Imperial' %}selected{% endif %}>Imperial</option>
-                <option value="metric" {% if units == 'Metric' %}selected{% endif %}>Metric</option>
-            </select>
+        <div class="radio-container">
+            <p>&nbsp; UNITS</p>
+            <div class="radiobuttons">
+                <div>
+                    <input type="radio" name="units" id="imperial" value="imperial" {% if units == "Imperial" %}checked {% endif %}>
+                    <label for="imperial">Imperial</label>
+                </div>
+                <div>
+                    <input type="radio" name="units" id="metric" value="metric" {% if units == "Metric" %}checked {% endif %}>
+                    <label for="metric">Metric</label>
+                </div>
+            </div>
         </div>
+        <!--<div>-->
+        <!--    <select>-->
+        <!--        <option value="imperial" {% if units == 'Imperial' %}selected{% endif %}>Imperial</option>-->
+        <!--        <option value="metric" {% if units == 'Metric' %}selected{% endif %}>Metric</option>-->
+        <!--    </select>-->
+        <!--</div>-->
         <div class='scrollable-table-container'>
             <table>
                 <tr class='table-header'>
@@ -44,7 +57,7 @@
                 <tr>
                     <td>{{ session.sysdate }}</td>
                     {% for measurement in session.measurements %}
-                        <td>{{ measurement }}</td>
+                        <td class="table-data">{{ measurement }}</td>
                     {% endfor %}
                 </tr>
                 {% endfor %}

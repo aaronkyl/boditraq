@@ -4,21 +4,29 @@
     Login
 {% endblock %}
 
+{% block headItems %}
+    <link rel="stylesheet" href="/style/login.css" type="text/css">
+{% endblock %}
+
 {% block body %}
-    <!-- elif isn't working, so using separate if statements -->
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
-    {% if info %}
-        <p class="info">{{ info }}</p>
-    {% endif %}
-    {% if success %}
-        <p class="success">{{ success }}</p>
-    {% endif %}
-    <form action="/login" method="POST">
-        <input name="username" placeholder="Username" />
-        <input name="password" type="password" placeholder="Password" />
-        <button type="submit">Log In</button>
-    </form>
-    <a href="/reset_password" method="GET">Forgot Password?</a>
+    <div class="login-container">
+        <div class="login-div">
+            <!-- elif isn't working, so using separate if statements -->
+            <!--{% if error %}-->
+            <!--    <p class="error">{{ error }}</p>-->
+            <!--{% endif %}-->
+            <!--{% if info %}-->
+            <!--    <p class="info">{{ info }}</p>-->
+            <!--{% endif %}-->
+            <!--{% if success %}-->
+            <!--    <p class="success">{{ success }}</p>-->
+            <!--{% endif %}-->
+            <form action="/login" method="POST">
+                <input name="username" placeholder="Username" autocomplete="off"/>
+                <input name="password" type="password" placeholder="Password" />
+                <button type="submit">Log In</button>
+            </form>
+            <a href="/reset_password" method="GET">Forgot Password?</a>
+        </div>
+    </div>
 {% endblock %}

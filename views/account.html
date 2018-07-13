@@ -5,30 +5,32 @@
 {% endblock %}
 
 {% block headItems %}
-    
+    <link rel="stylesheet" href="/style/account.css" type="text/css">
 {% endblock %}
 
 {% block body %}
     <!-- elif isn't working, so using separate if statements -->
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
-    {% if info %}
-        <p class="info">{{ info }}</p>
-    {% endif %}
-    {% if success %}
-        <p class="success">{{ success }}</p>
-    {% endif %}
-    <h3>Update Name</h3>
-    <form action="/rename" method="POST">
-        <input name="firstname" value="{{ userinfo.firstname }}" placeholder="First Name" required>
-        <input name="lastname" value="{{ userinfo.lastname }}" placeholder="Last Name" required>
-        <button type="submit">Update</button>
-    </form>
-    <h3>Change Password</h3>
-    <form action="/change_password" method="POST">
-        <input name="password" type="password" placeholder="New Password" required>
-        <input name="password_confirm" type="password" placeholder="Confirm Password" required>
-        <button type="submit">Change Password</button>
-    </form>
+    <div class="account-container">
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        {% if info %}
+            <p class="info">{{ info }}</p>
+        {% endif %}
+        {% if success %}
+            <p class="success">{{ success }}</p>
+        {% endif %}
+        <h3>Update Name</h3>
+        <form action="/rename" method="POST">
+            <input name="firstname" value="{{ userinfo.firstname }}" placeholder="First Name" required>
+            <input name="lastname" value="{{ userinfo.lastname }}" placeholder="Last Name" required>
+            <button type="submit">Update</button>
+        </form>
+        <h3>Change Password</h3>
+        <form action="/change_password" method="POST">
+            <input name="password" type="password" placeholder="New Password" required>
+            <input name="password_confirm" type="password" placeholder="Confirm Password" required>
+            <button type="submit">Change Password</button>
+        </form>
+    </div>
 {% endblock %}

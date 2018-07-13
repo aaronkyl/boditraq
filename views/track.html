@@ -6,34 +6,38 @@
 
 {% block headItems %}
     <link rel="stylesheet" href="style/track.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 {% endblock %}
 
 {% block body %}
     <div class="track-container">
-        <p>Weight is required</p>
         <div class="inner-track-container">
             <div class="preload"></div>
             <div class="form-div">
+                <!--<p class="note"><i>Weight is required</i></p>-->
                 <form action="/track" method="POST">
-                    <select name="measurement_units">
-                        {% for unit in units %}
-                            <option value="{{ unit.id }}" {% if unit.literal == unitsOfMeasure %}selected {% endif %}>{{ unit.literal }}</option>
-                        {% endfor %}
-                    </select>
+                    <div class="units-select">
+                        <p>UNITS &nbsp;&nbsp;:</p>
+                        <select name="measurement_units">
+                            {% for unit in units %}
+                                <option value="{{ unit.id }}" {% if unit.literal == unitsOfMeasure %}selected {% endif %}>{{ unit.literal }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     {% for measurement in measurements %}
                         <div class="measurement-input-container">
-                            <label for="{{ measurement.id }}">{{ measurement.body_measurement_literal }}</label>
-                            <input name="{{ measurement.id }}" type="number" step="0.1" min="0" autocomplete="off" {% if measurement.body_measurement_literal == "Weight" %} required {% endif %}>
+                            <label for="{{ measurement.id }}" {% if measurement.body_measurement_literal == "Weight" %}class="focused"{% endif %}>{{ measurement.body_measurement_literal }}</label>
+                            <input name="{{ measurement.id }}" type="number" step="0.1" min="0" autocomplete="off" {% if measurement.body_measurement_literal == "Weight" %} autofocus required {% endif %}>
                             <!--Need jQuery to change this based on above unit selection -->
                             {% if unitsOfMeasure == "Imperial" %}
                                 {% if measurement.body_measurement_literal == "Weight" %}
-                                    <p class="units {{ measurement.id }}">lbs</p>
+                                    <p class="units {{ measurement.id }} focused">lbs</p>
                                 {% else %}
                                     <p class="units {{ measurement.id }}">in</p>
                                 {% endif %}
                             {% else %}
                                 {% if measurement.body_measurement_literal == "Weight" %}
-                                    <p class="units {{ measurement.id }}">kg</p>
+                                    <p class="units {{ measurement.id }} focused">kg</p>
                                 {% else %}
                                     <p class="units {{ measurement.id }}">cm</p>
                                 {% endif %}

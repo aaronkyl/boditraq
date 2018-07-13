@@ -4,14 +4,22 @@
     Register
 {% endblock %}
 
+{% block headItems %}
+    <link rel="stylesheet" href="/style/register.css" type="text/css">
+{% endblock %}
+
 {% block body %}
-    <form action="/register" method="POST">
-        <input name="username" placeholder="Username" required/>
-        <input name="firstname" placeholder="First Name" required/>
-        <input name="lastname" placeholder="Last Name" required/>
-        <input name="email" placeholder="Email" required/>
-        <input name="password" type="password" placeholder="Password" required/>
-        <input name="password_confirm" type="password" placeholder="Confirm Password" required/>
-        <button type="submit">Register</button>
-    </form>
+    <div class="register-container">
+        <div class="register-div">
+            <form action="/register" method="POST">
+                <input name="username" placeholder="Username" autocomplete="off" required/>
+                <input name="firstname" placeholder="First Name" autocomplete="off" required/>
+                <input name="lastname" placeholder="Last Name" autocomplete="off" required/>
+                <input name="email" placeholder="Email" autocomplete="off" required/>
+                <input name="password" type="password" placeholder="Password" autocomplete="off" required/>
+                <input name="password_confirm" type="password" placeholder="Confirm Password" autocomplete="off" required/>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

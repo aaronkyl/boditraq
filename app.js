@@ -110,7 +110,11 @@ function capitalize(s)
 
 app.route('/')
     .get((req, resp) => {
-        resp.render('index.html', {user: JSON.stringify(req.user)});
+        if (req.user) {
+            resp.redirect('/dashboard');
+        } else {
+            resp.render('index.html');
+        }
     })
     .post((req, resp) => resp.redirect('/'));
    
@@ -281,8 +285,6 @@ app.route('/dashboard')
                     datasets.push(obj);
                 }
                 
-                console.log(datasets);
-                
                 const chartData = {
                     labels: xAxesValues,
                     datasets: datasets
@@ -308,7 +310,6 @@ app.route('/track')
             unitsOfMeasure = "Imperial";   
         }
         
-        console.log(req.query.units, unitsOfMeasure);
         db.any('SELECT * FROM body_measurements_cd ORDER BY sort_order')
         .then(data => {
             db.any('SELECT * FROM measurement_units_cd')
@@ -325,7 +326,6 @@ app.route('/track')
         .then(data => {
             let session_id = data.id;
             let units_id = parseInt(req.body.measurement_units, 10);
-            console.log(units_id, typeof units_id);
             for (let prop in req.body) {
                 if (req.body[prop]) {
                     db.query('INSERT INTO user_body_measurements \

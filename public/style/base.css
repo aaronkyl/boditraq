@@ -19,24 +19,21 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /*padding: 35px 25px 35px 25px;*/
     background-color: #181818;
     height: 100px;
+    transition: background-color 0.5s ease, color 0.5s ease;
+    color: white;
 }
 
 #block-body {
-    padding: 0 50px;
+    padding: 25px 50px 0 50px;
     height: calc(100% - 100px);
+    box-sizing: border-box;
 }
 
 nav a {
     text-decoration: none;
-    transition: background-color 0.5s ease,
-                color 0.5s ease;
-}
-
-nav a:hover {
-    color: red;
+    color: inherit;
 }
 
 nav div:first-child {
@@ -65,10 +62,11 @@ nav div:nth-child(2) {
 }
 
 nav div:nth-child(2) a {
-    padding: 0 20px;
+    padding: 0 40px;
     height: 100%;
     display: flex;
     align-items: center;
+    font-size: 1.75em;
 }
 
 input {
@@ -80,38 +78,90 @@ input {
     font-size: 1.5em;
 }
 
-.red-background-hover:hover {
+nav.red-background-hover {
     background-color: red;
     color: #181818;
 }
 
-.orange-background-hover:hover {
+nav.orange-background-hover {
     background-color: orange;
     color: #181818;
 }
 
-.yellow-background-hover:hover {
+nav.yellow-background-hover {
     background-color: yellow;
     color: #181818;
 }
 
-.green-background-hover:hover {
-    background-color: green;
+nav.green-background-hover {
+    background-color: limegreen;
     color: #181818;
 }
 
-.blue-background-hover:hover {
+nav.blue-background-hover {
     background-color: blue;
     color: white;
 }
 
-.purple-background-hover:hover {
+nav.purple-background-hover {
     background-color: purple;
-    color: #181818;
+    color: white;
 }
 
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
+}
+
+input {
+    text-align: center;
+    caret-color: transparent;
+}
+
+input:focus {
+    outline: none;
+    color: limegreen;
+    border-bottom: 2px solid limegreen;
+}
+
+button[type=submit] {
+    background-color: limegreen;
+    border: none;
+    border-radius: 3px;
+    color: black;
+    font-size: 1em;
+    height: 2em;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+button[type=submit]:hover, button[type=submit]:focus {
+    background-color: yellow;
+    outline: none;
+    letter-spacing: .2em;
+}
+
+select {
+    background-color: grey;
+    color: black;
+    font-size: 1em;
+    border: none;
+}
+
+select:hover, select:focus {
+    background-color: yellow;
+    outline: none;
+}
+
+.info {
+    color: aqua;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: limegreen;
 }

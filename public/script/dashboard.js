@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    $('select').change(function() {
-        window.location.replace('/dashboard?units=' + $('select').val());
+    $('input[type=radio]').change(function() {
+        window.location.replace('/dashboard?units=' + $('input[name=units]:checked').val());
     });
     
     var datasets = $('#chartData').data().other.datasets;
