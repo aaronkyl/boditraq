@@ -64,11 +64,13 @@ nav div:nth-child(2) {
 }
 
 nav div:nth-child(2) a {
-    padding: 0 40px;
-    height: 100%;
+    padding: 25px 25px;
+    margin: 0 15px;
+    /*height: 100%;*/
     display: flex;
     align-items: center;
     font-size: 1.75em;
+    border-radius: 50%;
 }
 
 input {
@@ -80,32 +82,32 @@ input {
     font-size: 1.5em;
 }
 
-nav.red-background-hover {
+.red-background-hover:hover {
     background-color: red;
     color: #181818;
 }
 
-nav.orange-background-hover {
+.orange-background-hover:hover {
     background-color: orange;
     color: #181818;
 }
 
-nav.yellow-background-hover {
+.yellow-background-hover:hover {
     background-color: yellow;
     color: #181818;
 }
 
-nav.green-background-hover {
+.green-background-hover:hover {
     background-color: limegreen;
     color: #181818;
 }
 
-nav.blue-background-hover {
+.blue-background-hover:hover {
     background-color: blue;
     color: white;
 }
 
-nav.purple-background-hover {
+.purple-background-hover:hover {
     background-color: purple;
     color: white;
 }
