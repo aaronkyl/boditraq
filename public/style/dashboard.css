@@ -11,7 +11,6 @@
 }
 
 table {
-    border: 1px solid red;
     border-collapse: collapse;
     border-spacing: 0;
     margin: auto;
@@ -68,8 +67,9 @@ label, input {
 }
 
 .scrollable-table-container {
-    height: 30%;
+    height: 21%;
     overflow-y: auto;
+    /*border: 1px solid #959595;*/
 }
 
 .table-header {

@@ -20,6 +20,13 @@ h3 {
     text-transform: uppercase;
     letter-spacing: .1em;
     font-weight: 300;
+    padding-top: 2em;
+}
+
+form {
+    display: flex;
+    justify-content: space-around;
+    align-items: baseline;
 }
 
 form[action="/rename"] {

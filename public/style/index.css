@@ -20,6 +20,7 @@ body {
 
 #homepage-content div:nth-child(3) {
     padding-top: 8em;
+    padding-bottom: 5em;
 }
 
 #homepage-content div:first-child img {
