@@ -399,7 +399,8 @@ app.route('/change_password')
     
 app.route('/reset_password')
     .get((req, resp) => resp.render('reset_password.html'))
-    .post(loggedIn, (req, resp, next) => {
+    .post((req, resp, next) => {
+        console.log('password reset initiated');
         const new_password = Math.random().toString(36).substring(2, 6) + Math.random().toString(36).substring(2, 6);
         const new_hash = pbkdf2.pbkdf2Sync(new_password, salt, 1, 32, 'sha256');
         const email = req.body.email;
@@ -412,7 +413,7 @@ app.route('/reset_password')
         })
         .then(() => {
             //email new password to user
-            
+            console.log('password updated');
             var params = {
               Destination: { /* required */
                 CcAddresses: [],
@@ -422,18 +423,18 @@ app.route('/reset_password')
                 Body: { /* required */
                   Html: {
                    Charset: "UTF-8",
-                   Data: "Your <a href='http://www.boditraq.com'>BodiTraq</a> password has been reset to " + new_password +". \n\
+                   Data: "Your <a href='http://www.boditraq.com'>boditraq</a> password has been reset to " + new_password +". \n\
                           You can change it using the Account page once you log in."
                   },
                   Text: {
                    Charset: "UTF-8",
-                   Data: "Your BodiTraq password has been reset to " + new_password +". \n\
+                   Data: "Your boditraq password has been reset to " + new_password +". \n\
                           You can change it using the Account page once you log in."
                   }
                  },
                  Subject: {
                   Charset: 'UTF-8',
-                  Data: 'BodiTraq Password Reset'
+                  Data: 'boditraq Password Reset'
                  }
                 },
               Source: 'aaronwilkinson@gmail.com', /* required */
@@ -455,7 +456,7 @@ app.route('/reset_password')
               });
         })
         .then(() => {
-            req.flash('success', 'New password has been emailed to you');
+            req.flash('info', 'New password has been emailed to you');
             resp.redirect('/login');
         })
         .catch(err => {
