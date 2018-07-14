@@ -40,6 +40,7 @@
                             {% endif %}
                         {% endif %}
                     {% endfor %}
+                    <th class="edit"></th>
                 </tr>
                 {% for session in sessions %}
                 <tr>
@@ -47,6 +48,7 @@
                     {% for measurement in session.measurements %}
                         <td class="table-data">{{ measurement }}</td>
                     {% endfor %}
+                    <td class="edit"><a href="/edit_session?session={{ session.session_id }}"><i class="fal fa-pen-square"></i></a></td>
                 </tr>
                 {% endfor %}
             </table>

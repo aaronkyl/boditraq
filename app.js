@@ -2,9 +2,9 @@ const express = require('express');
 const nunjucks = require('nunjucks');
 const pgp = require('pg-promise')({});
 // dev
-// const db = pgp({database: 'boditraq', user: 'postgres'});
+const db = pgp({database: 'boditraq', user: 'postgres'});
 // prod
-const db = pgp(process.env.DATABASE_URL);
+// const db = pgp(process.env.DATABASE_URL);
 const session = require('express-session');
 const pbkdf2 = require('pbkdf2');
 const body_parser = require('body-parser');
@@ -343,6 +343,53 @@ app.route('/track')
             resp.redirect('/dashboard');
         })
         .catch(err => console.log("/track session insert error: ", err));
+    });
+
+app.route('/edit_session')
+    .get(loggedIn, (req, resp) => {
+        if (req.query.session) {
+            db.query("\
+                SELECT * \
+                FROM user_body_measurements ubm \
+                INNER JOIN user_measurement_sessions ums ON ums.id = ubm.user_measurement_sessions_id \
+                WHERE ums.id = ${session_id} \
+                AND ums.user_id = ${user_id} \
+                ORDER BY ubm.body_measurements_cd_id",
+                {
+                    session_id: req.query.session,
+                    user_id: req.user.id
+                })
+            .then(session_data => {
+                console.log(session_data);
+                db.query("SELECT * FROM body_measurements_cd")
+                .then(measurement_cds => {
+                    let session_data_measurement_ids = session_data.map((session) => session.body_measurements_cd_id);
+                    let session_data_array = measurement_cds.map(cd => {
+                        if (session_data.find((session) => session.body_measurements_cd_id == cd.id)) {
+                            let newObj = {
+// TODO                        
+                            };
+                            return session_data[session_data_measurement_ids.indexOf(cd.id)];
+                        } else {
+                            return null;
+                        }
+                    });
+                    console.log(session_data_array);
+                    resp.redirect('/dashboard');
+                })
+                .catch(err => {
+                    console.log('edit session measurements error: ', err);
+                    resp.redirect('/dashboard');
+                });
+            })
+            .catch(err => {
+                console.log('edit session error: ', err);
+                req.flash('error', 'You do not have access to that session');
+                resp.redirect('/dashboard');
+            });
+        } else {
+            resp.redirect('/dashboard');
+        }
     });
 
 app.route('/account')
