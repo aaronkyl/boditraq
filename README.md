@@ -1,5 +1,6 @@
 # boditraq
 [boditraq.com](http://www.boditraq.com)
+
 App to track physical changes associated with working out and/or diet changes
 
 [Trello Board](https://trello.com/b/EH6yh3eK/boditraq)
