@@ -1,5 +1,5 @@
 # boditraq
-##[boditraq.com](http://www.boditraq.com)
+## [boditraq.com](http://www.boditraq.com)
 
 App to track physical changes associated with working out and/or diet changes
 
