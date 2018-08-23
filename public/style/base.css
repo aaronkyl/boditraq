@@ -28,7 +28,7 @@ nav {
 
 #block-body {
     padding: 25px 50px 10px 50px;
-    min-height: calc(100vh - 100px);
+    min-height: calc(100vh - 135px);
     /*height: auto;*/
     box-sizing: border-box;
 }
