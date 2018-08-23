@@ -1,6 +1,7 @@
 #block-body {
     margin: 0 150px;
     background-color: #20262E;
+    min-height: calc(100vh - 100px);
 }
 
 p {
